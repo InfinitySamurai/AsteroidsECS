@@ -10,10 +10,9 @@ import net.infinitycorp.asteroidsecs.factories.BulletFactory;
 public class ShootingSystem extends EntitySystem{
     private ImmutableArray<Entity> entities;
 
-    private ComponentMapper<CanShootComponent> canShootMapper = ComponentMapper.getFor(CanShootComponent.class);
     private ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<RotationComponent> rotationMapper = ComponentMapper.getFor(RotationComponent.class);
-    private ComponentMapper<ShotCooldownComponent> cooldownMapper = ComponentMapper.getFor(ShotCooldownComponent.class);
+    private ComponentMapper<ShootingComponent> shootingMapper = ComponentMapper.getFor(ShootingComponent.class);
 
     private BulletFactory bulletFactory = new BulletFactory();
 
@@ -25,33 +24,31 @@ public class ShootingSystem extends EntitySystem{
 
 
     public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Family.all(PlayerControlComponent.class, PositionComponent.class, RotationComponent.class).get());
+        entities = engine.getEntitiesFor(Family.all(ShootingComponent.class, PositionComponent.class, RotationComponent.class).get());
     }
 
     public void update(float delta){
-        CanShootComponent canShoot;
+        ShootingComponent shoot;
         PositionComponent position;
         RotationComponent rotation;
-        ShotCooldownComponent cooldown;
 
         for (Entity e : entities){
-            canShoot = canShootMapper.get(e);
+            shoot = shootingMapper.get(e);
             position = positionMapper.get(e);
             rotation = rotationMapper.get(e);
-            cooldown = cooldownMapper.get(e);
 
-            if(canShoot != null){
+            if(shoot.canShoot){
                 if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
                     engine.addEntity(bulletFactory.createBullet(position.x, position.y, rotation.rotation, 300));
-                    e.remove(canShoot.getClass());
-                    e.add(new ShotCooldownComponent(0.5f));
+                    shoot.canShoot = false;
+                    shoot.cooldown = shoot.defaultCooldown;
                 }
             }
-            else if(cooldown != null){
-                cooldown.cooldown -= delta;
-                if(cooldown.cooldown < 0){
-                    e.remove(cooldown.getClass());
-                    e.add(new CanShootComponent());
+            else {
+                shoot.cooldown -= delta;
+                if(shoot.cooldown < 0){
+                    shoot.cooldown = 0;
+                    shoot.canShoot = true;
                 }
             }
         }

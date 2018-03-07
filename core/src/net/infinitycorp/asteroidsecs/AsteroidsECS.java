@@ -35,7 +35,7 @@ public class AsteroidsECS extends ApplicationAdapter {
         ship.add(new ScreenWrapComponent());
         ship.add(new RotationComponent(125, 150));
         ship.add(new PlayerControlComponent());
-        ship.add(new CanShootComponent());
+        ship.add(new ShootingComponent(true, 0.1f));
         engine.addEntity(ship);
 
         Entity bullet = new Entity();
