@@ -13,13 +13,14 @@ public class BulletFactory {
 
     }
 
-    public Entity createBullet(float x, float y, float rotation, float speed){
+    public Entity createBullet(float x, float y, float rotation, float speed, float offsetDistance){
         Entity bullet = new Entity();
         bullet.add(new VisualComponent(new TextureRegion(bulletTexture)));
 
-        bullet.add(new PositionComponent(x, y));
+        Vector2 positionOffset = getVectorFromRotationAndMagnitude(rotation, offsetDistance);
+        bullet.add(new PositionComponent(x + positionOffset.x, y + positionOffset.y));
         bullet.add(new RotationComponent(rotation, 0));
-        Vector2 velocity = getVelocitiesFromRotationAndSpeed(rotation, speed);
+        Vector2 velocity = getVectorFromRotationAndMagnitude(rotation, speed);
         bullet.add(new VelocityComponent(velocity.x, velocity.y));
         bullet.add(new ScreenWrapComponent());
         bullet.add(new LifetimeComponent(2));
@@ -27,9 +28,9 @@ public class BulletFactory {
         return bullet;
     }
 
-    private Vector2 getVelocitiesFromRotationAndSpeed(float rotation, float speed){
-        float x = (float)Math.cos(Math.toRadians(rotation)) * speed;
-        float y = (float)Math.sin(Math.toRadians(rotation))* speed;
+    private Vector2 getVectorFromRotationAndMagnitude(float rotation, float magnitude){
+        float x = (float)Math.cos(Math.toRadians(rotation)) * magnitude;
+        float y = (float)Math.sin(Math.toRadians(rotation))* magnitude;
 
         return new Vector2(x, y);
     }

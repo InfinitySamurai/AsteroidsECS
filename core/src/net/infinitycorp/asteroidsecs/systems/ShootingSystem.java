@@ -13,6 +13,8 @@ public class ShootingSystem extends EntitySystem{
     private ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<RotationComponent> rotationMapper = ComponentMapper.getFor(RotationComponent.class);
     private ComponentMapper<ShootingComponent> shootingMapper = ComponentMapper.getFor(ShootingComponent.class);
+    private ComponentMapper<VisualComponent> visualMapper = ComponentMapper.getFor(VisualComponent.class);
+
 
     private BulletFactory bulletFactory = new BulletFactory();
 
@@ -31,15 +33,21 @@ public class ShootingSystem extends EntitySystem{
         ShootingComponent shoot;
         PositionComponent position;
         RotationComponent rotation;
+        VisualComponent visual;
 
         for (Entity e : entities){
             shoot = shootingMapper.get(e);
             position = positionMapper.get(e);
             rotation = rotationMapper.get(e);
+            visual = visualMapper.get(e);
 
             if(shoot.canShoot){
                 if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-                    engine.addEntity(bulletFactory.createBullet(position.x, position.y, rotation.rotation, 300));
+                    float offset = 0;
+                    if(visual.region != null){
+                        offset = visual.region.getRegionHeight() / 2;
+                    }
+                    engine.addEntity(bulletFactory.createBullet(position.x, position.y, rotation.rotation, 300, offset));
                     shoot.canShoot = false;
                     shoot.cooldown = shoot.defaultCooldown;
                 }
