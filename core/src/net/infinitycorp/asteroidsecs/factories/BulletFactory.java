@@ -22,6 +22,7 @@ public class BulletFactory {
         Vector2 velocity = getVelocitiesFromRotationAndSpeed(rotation, speed);
         bullet.add(new VelocityComponent(velocity.x, velocity.y));
         bullet.add(new ScreenWrapComponent());
+        bullet.add(new LifetimeComponent(2));
 
         return bullet;
     }

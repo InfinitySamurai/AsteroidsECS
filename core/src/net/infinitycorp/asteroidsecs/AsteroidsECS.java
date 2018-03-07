@@ -23,6 +23,7 @@ public class AsteroidsECS extends ApplicationAdapter {
         engine.addSystem(new ScreenWrapSystem());
         engine.addSystem(new PlayerControlSystem());
         engine.addSystem(new ShootingSystem(engine));
+        engine.addSystem(new LifetimeSystem(engine));
 
         Texture shipTexture = new Texture("ship.png");
         Texture bulletTexture = new Texture("bullet.png");
