@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.infinitycorp.asteroidsecs.components.*;
+import net.infinitycorp.asteroidsecs.factories.BulletFactory;
 
 public class ShootingSystem extends EntitySystem{
     private ImmutableArray<Entity> entities;
@@ -15,10 +16,9 @@ public class ShootingSystem extends EntitySystem{
     private ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<RotationComponent> rotationMapper = ComponentMapper.getFor(RotationComponent.class);
 
+    private BulletFactory bulletFactory = new BulletFactory();
+
     private Engine engine;
-
-    Texture bulletTexture = new Texture("bullet.png");
-
 
     public ShootingSystem(Engine engine){
         this.engine = engine;
@@ -41,16 +41,7 @@ public class ShootingSystem extends EntitySystem{
 
             if(canShoot != null){
                 if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-                    Entity newBullet = new Entity();
-                    float speed = 100;
-                    newBullet.add(new VisualComponent(new TextureRegion(bulletTexture)));
-
-                    newBullet.add(new PositionComponent(position.x, position.y));
-                    newBullet.add(new RotationComponent(rotation.rotation, 0));
-                    newBullet.add(new VelocityComponent((float)Math.cos(Math.toRadians(rotation.rotation)) * speed,(float)Math.sin(Math.toRadians(rotation.rotation))* speed));
-                    newBullet.add(new ScreenWrapComponent());
-
-                    engine.addEntity(newBullet);
+                    engine.addEntity(bulletFactory.createBullet(position.x, position.y, rotation.rotation, 300));
                 }
             }
         }
