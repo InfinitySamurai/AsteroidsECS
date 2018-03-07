@@ -1,4 +1,7 @@
 package net.infinitycorp.asteroidsecs.components;
 
-public class PlayerControlComponent {
+import com.badlogic.ashley.core.Component;
+
+public class PlayerControlComponent implements Component{
+
 }

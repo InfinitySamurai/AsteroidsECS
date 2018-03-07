@@ -7,10 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import net.infinitycorp.asteroidsecs.components.PositionComponent;
-import net.infinitycorp.asteroidsecs.components.ScreenWrapComponent;
-import net.infinitycorp.asteroidsecs.components.VelocityComponent;
-import net.infinitycorp.asteroidsecs.components.VisualComponent;
+import net.infinitycorp.asteroidsecs.components.*;
 import net.infinitycorp.asteroidsecs.systems.MovementSystem;
 import net.infinitycorp.asteroidsecs.systems.RenderSystem;
 import net.infinitycorp.asteroidsecs.systems.ScreenWrapSystem;
@@ -39,6 +36,7 @@ public class AsteroidsECS extends ApplicationAdapter {
         ship.add(new PositionComponent(250, 250));
         ship.add(new VelocityComponent(-150,-150));
         ship.add(new ScreenWrapComponent());
+        ship.add(new RotationComponent(125));
         engine.addEntity(ship);
 
         Entity bullet = new Entity();
