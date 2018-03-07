@@ -30,6 +30,7 @@ public class RenderSystem extends EntitySystem {
         PositionComponent position;
         VisualComponent visual;
         RotationComponent rotation;
+        float rotate;
 
         sb.begin();
         for (Entity e : entities) {
@@ -37,18 +38,36 @@ public class RenderSystem extends EntitySystem {
             visual = velocityMapper.get(e);
             rotation = rotationMapper.get(e);
 
-            float xPositionOfEntity = position.x - visual.region.getRegionWidth() / 2;
-            float yPositionOfEntity = position.y - visual.region.getRegionHeight() / 2;
-
-            Affine2 transform = new Affine2();
-
-            if(rotation != null){
-                transform.preRotate(rotation.rotation);
+            if(rotation == null){
+                rotate = 0;
+            }
+            else{
+                rotate = rotation.rotation;
             }
 
-            transform.preTranslate(new Vector2(xPositionOfEntity, yPositionOfEntity));
+            float textureWidth = visual.region.getRegionWidth();
+            float textureHeight = visual.region.getRegionHeight();
 
-            sb.draw(visual.region, visual.region.getRegionWidth(), visual.region.getRegionHeight(), transform);
+            float xPositionOfEntity = position.x - textureWidth / 2;
+            float yPositionOfEntity = position.y - textureHeight / 2;
+
+//            Affine2 transform = new Affine2();
+//
+//            if(rotation != null){
+//                transform.preRotate(rotation.rotation);
+//            }
+//
+//            transform.preTranslate(new Vector2(xPositionOfEntity, yPositionOfEntity));
+
+            sb.draw(visual.region,
+                    xPositionOfEntity,
+                    yPositionOfEntity,
+                    textureWidth / 2,
+                    textureHeight / 2,
+                    textureWidth, textureHeight,
+                    1,
+                    1,
+                    rotate);
         }
         sb.end();
     }
