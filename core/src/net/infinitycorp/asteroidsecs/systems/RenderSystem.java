@@ -3,8 +3,6 @@ package net.infinitycorp.asteroidsecs.systems;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Affine2;
-import com.badlogic.gdx.math.Vector2;
 import net.infinitycorp.asteroidsecs.components.PositionComponent;
 import net.infinitycorp.asteroidsecs.components.RotationComponent;
 import net.infinitycorp.asteroidsecs.components.VisualComponent;
@@ -50,14 +48,6 @@ public class RenderSystem extends EntitySystem {
 
             float xPositionOfEntity = position.x - textureWidth / 2;
             float yPositionOfEntity = position.y - textureHeight / 2;
-
-//            Affine2 transform = new Affine2();
-//
-//            if(rotation != null){
-//                transform.preRotate(rotation.rotation);
-//            }
-//
-//            transform.preTranslate(new Vector2(xPositionOfEntity, yPositionOfEntity));
 
             sb.draw(visual.region,
                     xPositionOfEntity,
