@@ -1,10 +1,9 @@
 package net.infinitycorp.asteroidsecs.systems;
 
 import com.badlogic.ashley.core.*;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Circle;
-import net.infinitycorp.asteroidsecs.components.AsteroidValueComponent;
+import net.infinitycorp.asteroidsecs.components.AsteroidTypeComponent;
 import net.infinitycorp.asteroidsecs.components.BulletComponent;
 import net.infinitycorp.asteroidsecs.components.PositionComponent;
 import net.infinitycorp.asteroidsecs.components.VisualComponent;
@@ -24,7 +23,7 @@ public class BulletCollisionSystem extends EntitySystem {
 
     public void addedToEngine(Engine engine) {
         bullets = engine.getEntitiesFor(Family.all(BulletComponent.class).get());
-        asteroids = engine.getEntitiesFor(Family.all(AsteroidValueComponent.class).get());
+        asteroids = engine.getEntitiesFor(Family.all(AsteroidTypeComponent.class).get());
     }
 
     public void update(float delta) {

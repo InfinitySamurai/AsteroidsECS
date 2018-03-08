@@ -18,7 +18,7 @@ public class AsteroidFactory {
         asteroid.add(new PositionComponent(position.x, position.y));
         asteroid.add(new VelocityComponent(velocity.x, velocity.y));
         asteroid.add(new ScreenWrapComponent());
-        asteroid.add(new AsteroidValueComponent(type.asteroidValue));
+        asteroid.add(new AsteroidTypeComponent(type));
 
         return asteroid;
     }
