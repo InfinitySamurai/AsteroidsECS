@@ -2,7 +2,7 @@ package net.infinitycorp.asteroidsecs.factories;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
-import net.infinitycorp.asteroidsecs.AsteroidTypes;
+import net.infinitycorp.asteroidsecs.AsteroidType;
 import net.infinitycorp.asteroidsecs.components.*;
 
 public class AsteroidFactory {
@@ -12,7 +12,7 @@ public class AsteroidFactory {
     public AsteroidFactory() {
     }
 
-    public Entity createAsteroid(Vector2 position, Vector2 velocity, AsteroidTypes type) {
+    public Entity createAsteroid(Vector2 position, Vector2 velocity, AsteroidType type) {
         Entity asteroid = new Entity();
         asteroid.add(new VisualComponent(type.textureRegion, ASTEROIDSCALE));
         asteroid.add(new PositionComponent(position.x, position.y));

@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import net.infinitycorp.asteroidsecs.AsteroidTypes;
+import net.infinitycorp.asteroidsecs.AsteroidType;
 import net.infinitycorp.asteroidsecs.components.AsteroidTypeComponent;
 import net.infinitycorp.asteroidsecs.components.PositionComponent;
 import net.infinitycorp.asteroidsecs.events.AsteroidDestructionListener;
@@ -73,7 +73,7 @@ public class AsteroidSpawningSystem extends EntitySystem {
     private void spawnBrokenAsteroids(){
         Entity destroyedAsteroid = listener.getDestroyedAsteroid();
         if(destroyedAsteroid != null){
-            AsteroidTypes newAsteroidType = asteroidValueMapper.get(destroyedAsteroid).type.nextSmallerAsteroid;
+            AsteroidType newAsteroidType = asteroidValueMapper.get(destroyedAsteroid).type.nextSmallerAsteroid;
             PositionComponent position = positionMapper.get(destroyedAsteroid);
             if(newAsteroidType != null){
                 engine.addEntity(asteroidFactory.createAsteroid(new Vector2(position.x, position.y), randomizeVelocity(), newAsteroidType));
@@ -90,7 +90,7 @@ public class AsteroidSpawningSystem extends EntitySystem {
                 return;
             }
 
-            Entity asteroid = asteroidFactory.createAsteroid(randomizeSpawnLocation(), randomizeVelocity(), AsteroidTypes.randomAsteroidType());;
+            Entity asteroid = asteroidFactory.createAsteroid(randomizeSpawnLocation(), randomizeVelocity(), AsteroidType.randomAsteroidType());;
             engine.addEntity(asteroid);
         }
         else{

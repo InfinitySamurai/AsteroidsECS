@@ -1,13 +1,13 @@
 package net.infinitycorp.asteroidsecs.components;
 
 import com.badlogic.ashley.core.Component;
-import net.infinitycorp.asteroidsecs.AsteroidTypes;
+import net.infinitycorp.asteroidsecs.AsteroidType;
 
 public class AsteroidTypeComponent implements Component{
 
-    public AsteroidTypes type;
+    public AsteroidType type;
 
-    public AsteroidTypeComponent(AsteroidTypes type){
+    public AsteroidTypeComponent(AsteroidType type){
         this.type = type;
     }
 }
