@@ -2,6 +2,7 @@ package net.infinitycorp.asteroidsecs;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import net.infinitycorp.asteroidsecs.components.VisualComponent;
 
 import java.util.Random;
 
@@ -12,12 +13,12 @@ public enum AsteroidType {
 
     private static Random random = new Random();
 
-    public TextureRegion textureRegion;
+    public VisualComponent visual;
     public int asteroidValue;
     public AsteroidType nextSmallerAsteroid;
 
     AsteroidType(String type, int value, AsteroidType nextSmallerAsteroid) {
-        this.textureRegion = new TextureRegion(new Texture(type));
+        this.visual = new VisualComponent(new TextureRegion(new Texture(type)), 0.75f);
         this.asteroidValue = value;
         this.nextSmallerAsteroid = nextSmallerAsteroid;
     }
