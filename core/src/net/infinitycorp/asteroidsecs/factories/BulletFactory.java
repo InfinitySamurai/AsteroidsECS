@@ -15,17 +15,22 @@ public class BulletFactory {
     }
 
     public Entity createBullet(float x, float y, float rotation, float speed, float offsetDistance){
+        Vector2 position = new Vector2(x, y);
+        Vector2 positionOffset = getVectorFromRotationAndMagnitude(rotation, offsetDistance);
+        position = position.add(positionOffset);
+
         Entity bullet = new Entity();
         bullet.add(new VisualComponent(new TextureRegion(bulletTexture)));
-
-        Vector2 positionOffset = getVectorFromRotationAndMagnitude(rotation, offsetDistance);
-        bullet.add(new PositionComponent(x + positionOffset.x, y + positionOffset.y));
+        bullet.add(new PositionComponent(position.x, position.y));
         bullet.add(new RotationComponent(rotation, 0));
+
         Vector2 velocity = getVectorFromRotationAndMagnitude(rotation, speed);
         bullet.add(new VelocityComponent(velocity.x, velocity.y));
+
         bullet.add(new ScreenWrapComponent());
         bullet.add(new LifetimeComponent(DEFAULTLIFETIME));
         bullet.add(new BulletComponent());
+        bullet.add(new HitCircleComponent(position, bulletTexture.getWidth()));
 
         return bullet;
     }

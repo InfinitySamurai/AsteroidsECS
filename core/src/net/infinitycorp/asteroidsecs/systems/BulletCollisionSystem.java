@@ -3,10 +3,7 @@ package net.infinitycorp.asteroidsecs.systems;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Circle;
-import net.infinitycorp.asteroidsecs.components.AsteroidTypeComponent;
-import net.infinitycorp.asteroidsecs.components.BulletComponent;
-import net.infinitycorp.asteroidsecs.components.PositionComponent;
-import net.infinitycorp.asteroidsecs.components.VisualComponent;
+import net.infinitycorp.asteroidsecs.components.*;
 
 public class BulletCollisionSystem extends EntitySystem {
 
@@ -16,33 +13,24 @@ public class BulletCollisionSystem extends EntitySystem {
 
     private ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<VisualComponent> visualMapper = ComponentMapper.getFor(VisualComponent.class);
+    private ComponentMapper<HitCircleComponent> hitCircleMapper = ComponentMapper.getFor(HitCircleComponent.class);
 
     public BulletCollisionSystem(Engine engine) {
         this.engine = engine;
     }
 
     public void addedToEngine(Engine engine) {
-        bullets = engine.getEntitiesFor(Family.all(BulletComponent.class).get());
-        asteroids = engine.getEntitiesFor(Family.all(AsteroidTypeComponent.class).get());
+        bullets = engine.getEntitiesFor(Family.all(BulletComponent.class, HitCircleComponent.class).get());
+        asteroids = engine.getEntitiesFor(Family.all(AsteroidTypeComponent.class, HitCircleComponent.class).get());
     }
 
     public void update(float delta) {
-        PositionComponent bulletPosition;
-        VisualComponent bulletVisual;
-
+        Circle bulletHitCircle;
         for (Entity bullet : bullets) {
-            bulletPosition = positionMapper.get(bullet);
-            bulletVisual = visualMapper.get(bullet);
-            Circle bulletHitCircle = new Circle(bulletPosition.x, bulletPosition.y, bulletVisual.width / 2);
-
-            PositionComponent asteroidPosition;
-            VisualComponent asteroidVisual;
-
+            bulletHitCircle = hitCircleMapper.get(bullet).hitCircle;
+            Circle asteroidHitCircle;
             for (Entity asteroid : asteroids) {
-                asteroidPosition = positionMapper.get(asteroid);
-                asteroidVisual = visualMapper.get(asteroid);
-                Circle asteroidHitCircle = new Circle(asteroidPosition.x, asteroidPosition.y, asteroidVisual.width / 2);
-
+                asteroidHitCircle = hitCircleMapper.get(asteroid).hitCircle;
                 if (bulletHitCircle.overlaps(asteroidHitCircle)) {
                     engine.removeEntity(asteroid);
                     engine.removeEntity(bullet);

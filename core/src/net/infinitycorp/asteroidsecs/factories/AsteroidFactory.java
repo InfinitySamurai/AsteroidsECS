@@ -19,6 +19,7 @@ public class AsteroidFactory {
         asteroid.add(new VelocityComponent(velocity.x, velocity.y));
         asteroid.add(new ScreenWrapComponent());
         asteroid.add(new AsteroidTypeComponent(type));
+        asteroid.add(new HitCircleComponent(position,  type.textureRegion.getRegionWidth() / 2 * ASTEROIDSCALE));
 
         return asteroid;
     }

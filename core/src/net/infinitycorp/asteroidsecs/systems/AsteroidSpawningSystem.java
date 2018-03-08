@@ -72,7 +72,6 @@ public class AsteroidSpawningSystem extends EntitySystem {
 
     private void spawnBrokenAsteroids(){
         Entity destroyedAsteroid = listener.getDestroyedAsteroid();
-        System.out.println(destroyedAsteroid);
         if(destroyedAsteroid != null){
             AsteroidTypes newAsteroidType = asteroidValueMapper.get(destroyedAsteroid).type.nextSmallerAsteroid;
             PositionComponent position = positionMapper.get(destroyedAsteroid);
