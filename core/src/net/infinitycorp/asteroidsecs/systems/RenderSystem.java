@@ -55,8 +55,8 @@ public class RenderSystem extends EntitySystem {
                     textureWidth / 2,
                     textureHeight / 2,
                     textureWidth, textureHeight,
-                    1,
-                    1,
+                    visual.scale,
+                    visual.scale,
                     rotate);
         }
         sb.end();

@@ -5,16 +5,18 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import net.infinitycorp.asteroidsecs.components.PositionComponent;
 import net.infinitycorp.asteroidsecs.components.ScreenWrapComponent;
+import net.infinitycorp.asteroidsecs.components.VisualComponent;
 
 public class ScreenWrapSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
 
-    private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
+    private ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
+    private ComponentMapper<VisualComponent> visualMapper = ComponentMapper.getFor(VisualComponent.class);
 
     private float windowWidth;
     private float windowHeight;
 
-    public ScreenWrapSystem(){
+    public ScreenWrapSystem() {
         windowWidth = Gdx.graphics.getWidth();
         windowHeight = Gdx.graphics.getHeight();
     }
@@ -25,22 +27,30 @@ public class ScreenWrapSystem extends EntitySystem {
 
     public void update(float delta) {
         PositionComponent position;
+        VisualComponent visual;
 
         for (Entity e : entities) {
-            position = pm.get(e);
+            position = positionMapper.get(e);
+            visual = visualMapper.get(e);
 
-            if (position.x > windowWidth){
-                position.x = 0;
-            }
-            else if (position.x < 0){
-                position.x = windowWidth;
+            float xoffset = 0;
+            float yoffset = 0;
+
+            if (visual != null) {
+                xoffset = visual.width / 2;
+                yoffset = visual.height / 2;
             }
 
-            if (position.y > windowHeight){
-                position.y = 0;
+            if (position.x > windowWidth + xoffset) {
+                position.x = 0 - xoffset;
+            } else if (position.x < 0 - xoffset) {
+                position.x = windowWidth + xoffset;
             }
-            else if(position.y < 0){
-                position.y = windowHeight;
+
+            if (position.y > windowHeight + yoffset) {
+                position.y = 0 -yoffset;
+            } else if (position.y < 0 - yoffset) {
+                position.y = windowHeight + yoffset;
             }
         }
     }
