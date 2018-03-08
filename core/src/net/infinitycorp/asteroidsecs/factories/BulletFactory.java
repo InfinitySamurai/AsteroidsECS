@@ -8,6 +8,7 @@ import net.infinitycorp.asteroidsecs.components.*;
 
 public class BulletFactory {
     Texture bulletTexture = new Texture("bullet.png");
+    private final float DEFAULTLIFETIME = 2;
 
     public BulletFactory(){
 
@@ -23,7 +24,8 @@ public class BulletFactory {
         Vector2 velocity = getVectorFromRotationAndMagnitude(rotation, speed);
         bullet.add(new VelocityComponent(velocity.x, velocity.y));
         bullet.add(new ScreenWrapComponent());
-        bullet.add(new LifetimeComponent(2));
+        bullet.add(new LifetimeComponent(DEFAULTLIFETIME));
+        bullet.add(new BulletComponent());
 
         return bullet;
     }
