@@ -44,7 +44,7 @@ public class ShootingSystem extends EntitySystem{
             if(shoot.canShoot){
                 if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
                     float offset = 0;
-                    if(visual.region != null){
+                    if(visual != null){
                         offset = visual.region.getRegionHeight() / 2;
                     }
                     engine.addEntity(bulletFactory.createBullet(position.x, position.y, rotation.rotation, 300, offset));

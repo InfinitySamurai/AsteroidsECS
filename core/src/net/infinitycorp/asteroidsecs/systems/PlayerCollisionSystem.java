@@ -1,20 +1,53 @@
 package net.infinitycorp.asteroidsecs.systems;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
-import net.infinitycorp.asteroidsecs.components.AsteroidTypeComponent;
-import net.infinitycorp.asteroidsecs.components.PositionComponent;
-import net.infinitycorp.asteroidsecs.components.VisualComponent;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Circle;
+import net.infinitycorp.asteroidsecs.components.*;
 
 public class PlayerCollisionSystem extends EntitySystem {
 
     private ImmutableArray<Entity> asteroids;
-    private Entity player;
+    private ImmutableArray<Entity> ships;
+    private Engine engine;
+
+    private ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
+    private ComponentMapper<HitCircleComponent> hitCircleMapper = ComponentMapper.getFor(HitCircleComponent.class);
+    private ComponentMapper<VelocityComponent> velocityMapper = ComponentMapper.getFor(VelocityComponent.class);
+
+    public PlayerCollisionSystem(Engine engine){
+        this.engine = engine;
+    }
 
     public void addedToEngine(Engine engine) {
-        asteroids = engine.getEntitiesFor(Family.all(AsteroidTypeComponent.class, PositionComponent.class, VisualComponent.class).get());
+        asteroids = engine.getEntitiesFor(Family.all(AsteroidTypeComponent.class, PositionComponent.class, VisualComponent.class, HitCircleComponent.class).get());
+        ships = engine.getEntitiesFor(Family.all(ShipComponent.class, PositionComponent.class, HitCircleComponent.class, VisualComponent.class).get());
+    }
+
+    public void update(float delta) {
+        Circle shipHitCircle;
+        Circle asteroidHitCircle;
+
+        for(Entity ship : ships){
+            shipHitCircle = hitCircleMapper.get(ship).hitCircle;
+            for(Entity asteroid : asteroids){
+                asteroidHitCircle = hitCircleMapper.get(asteroid).hitCircle;
+
+                if(shipHitCircle.overlaps(asteroidHitCircle)){
+                    PositionComponent shipPosition = positionMapper.get(ship);
+                    shipPosition.x = Gdx.graphics.getWidth() / 2;
+                    shipPosition.y = Gdx.graphics.getHeight() / 2;
+
+                    VelocityComponent shipVelocity = velocityMapper.get(ship);
+                    if(shipVelocity != null){
+                        shipVelocity.x = 0;
+                        shipVelocity.y = 0;
+                    }
+                }
+            }
+        }
+
+
     }
 }

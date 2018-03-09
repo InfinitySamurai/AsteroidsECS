@@ -26,9 +26,10 @@ public class BulletCollisionSystem extends EntitySystem {
 
     public void update(float delta) {
         Circle bulletHitCircle;
+        Circle asteroidHitCircle;
+
         for (Entity bullet : bullets) {
             bulletHitCircle = hitCircleMapper.get(bullet).hitCircle;
-            Circle asteroidHitCircle;
             for (Entity asteroid : asteroids) {
                 asteroidHitCircle = hitCircleMapper.get(asteroid).hitCircle;
                 if (bulletHitCircle.overlaps(asteroidHitCircle)) {

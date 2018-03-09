@@ -27,6 +27,7 @@ public class AsteroidsECS extends ApplicationAdapter {
         engine.addSystem(new LifetimeSystem(engine));
         engine.addSystem(new AsteroidSpawningSystem(engine));
         engine.addSystem(new BulletCollisionSystem(engine));
+        engine.addSystem(new PlayerCollisionSystem(engine));
 
         Texture shipTexture = new Texture("ship.png");
         Texture bulletTexture = new Texture("bullet.png");

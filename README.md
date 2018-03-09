@@ -2,9 +2,11 @@
 
 A re-creation of the asteroids game using LibGDX and an entity component system (Ashley)
 
-[] Add textureregion of asteroids to AsteroidTypes
+[x] Add VisualComponent of asteroids to AsteroidTypes
 
-[] Change the name of AsteroidTypes to AsteroidType
+[x] Change the name of AsteroidTypes to AsteroidType
+
+[] Make asteroid have random speed on spawn
 
 [] Collision of player with asteroids
 
