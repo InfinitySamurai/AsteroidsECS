@@ -30,7 +30,6 @@ public class AsteroidsECS extends ApplicationAdapter {
         engine.addSystem(new PlayerCollisionSystem(engine));
 
         Texture shipTexture = new Texture("ship.png");
-        Texture bulletTexture = new Texture("bullet.png");
         Vector2 centreOfScreen = new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
         Entity ship = new Entity();
