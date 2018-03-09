@@ -15,6 +15,7 @@ public class PlayerCollisionSystem extends EntitySystem {
     private ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<HitCircleComponent> hitCircleMapper = ComponentMapper.getFor(HitCircleComponent.class);
     private ComponentMapper<VelocityComponent> velocityMapper = ComponentMapper.getFor(VelocityComponent.class);
+    private ComponentMapper<HitpointComponent> hitpointsMapper = ComponentMapper.getFor(HitpointComponent.class);
 
     public PlayerCollisionSystem(Engine engine){
         this.engine = engine;
@@ -43,6 +44,12 @@ public class PlayerCollisionSystem extends EntitySystem {
                     if(shipVelocity != null){
                         shipVelocity.x = 0;
                         shipVelocity.y = 0;
+                    }
+
+                    HitpointComponent shipHitpoints = hitpointsMapper.get(ship);
+                    if(shipHitpoints != null) {
+                        shipHitpoints.hitpoints -= 1;
+                        System.out.println(shipHitpoints.hitpoints);
                     }
                 }
             }

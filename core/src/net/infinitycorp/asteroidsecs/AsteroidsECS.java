@@ -43,6 +43,7 @@ public class AsteroidsECS extends ApplicationAdapter {
         ship.add(new ShootingComponent(true, 0.1f));
         ship.add(new ShipComponent());
         ship.add(new HitCircleComponent(centreOfScreen, shipTexture.getWidth() / 2));
+        ship.add(new HitpointComponent(5));
         engine.addEntity(ship);
     }
 
