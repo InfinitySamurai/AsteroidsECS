@@ -16,6 +16,7 @@ public class PlayerCollisionSystem extends EntitySystem {
     private ComponentMapper<HitCircleComponent> hitCircleMapper = ComponentMapper.getFor(HitCircleComponent.class);
     private ComponentMapper<VelocityComponent> velocityMapper = ComponentMapper.getFor(VelocityComponent.class);
     private ComponentMapper<HitpointComponent> hitpointsMapper = ComponentMapper.getFor(HitpointComponent.class);
+    private ComponentMapper<RotationComponent> roationMapper = ComponentMapper.getFor(RotationComponent.class);
 
     public PlayerCollisionSystem(Engine engine){
         this.engine = engine;
@@ -40,6 +41,11 @@ public class PlayerCollisionSystem extends EntitySystem {
                     shipPosition.x = Gdx.graphics.getWidth() / 2;
                     shipPosition.y = Gdx.graphics.getHeight() / 2;
 
+                    RotationComponent shipRotation = roationMapper.get(ship);
+                    if(shipRotation != null){
+                        shipRotation.rotation = 90;
+                    }
+
                     VelocityComponent shipVelocity = velocityMapper.get(ship);
                     if(shipVelocity != null){
                         shipVelocity.x = 0;
@@ -51,6 +57,12 @@ public class PlayerCollisionSystem extends EntitySystem {
                         shipHitpoints.hitpoints -= 1;
                         System.out.println(shipHitpoints.hitpoints);
                     }
+
+                    for (Entity a : asteroids){
+                        engine.removeEntity(a);
+                    }
+
+                    return;
                 }
             }
         }
