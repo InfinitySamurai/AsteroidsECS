@@ -16,8 +16,8 @@ public class RenderSystem extends EntitySystem {
     private ComponentMapper<VisualComponent> velocityMapper = ComponentMapper.getFor(VisualComponent.class);
     private ComponentMapper<RotationComponent> rotationMapper = ComponentMapper.getFor(RotationComponent.class);
 
-    public RenderSystem() {
-        this.sb = new SpriteBatch();
+    public RenderSystem(SpriteBatch sb) {
+        this.sb = sb;
     }
 
     public void addedToEngine(Engine engine) {
@@ -30,7 +30,6 @@ public class RenderSystem extends EntitySystem {
         RotationComponent rotation;
         float rotate;
 
-        sb.begin();
         for (Entity e : entities) {
             position = positionMapper.get(e);
             visual = velocityMapper.get(e);
@@ -59,6 +58,5 @@ public class RenderSystem extends EntitySystem {
                     visual.scale,
                     rotate);
         }
-        sb.end();
     }
 }

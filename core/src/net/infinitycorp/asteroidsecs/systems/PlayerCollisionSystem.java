@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
+import net.infinitycorp.asteroidsecs.Ui;
 import net.infinitycorp.asteroidsecs.components.*;
 
 public class PlayerCollisionSystem extends EntitySystem {
@@ -55,7 +56,10 @@ public class PlayerCollisionSystem extends EntitySystem {
                     HitpointComponent shipHitpoints = hitpointsMapper.get(ship);
                     if(shipHitpoints != null) {
                         shipHitpoints.hitpoints -= 1;
-                        System.out.println(shipHitpoints.hitpoints);
+                        if(shipHitpoints.hitpoints <= 0){
+                            Ui.scoreUiElement.getComponent(ScoreComponent.class).score = 0;
+                            shipHitpoints.hitpoints = shipHitpoints.maxHitpoints;
+                        }
                     }
 
                     for (Entity a : asteroids){

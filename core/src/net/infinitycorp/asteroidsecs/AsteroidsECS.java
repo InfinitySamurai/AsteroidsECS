@@ -1,11 +1,16 @@
 package net.infinitycorp.asteroidsecs;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import net.infinitycorp.asteroidsecs.components.*;
@@ -13,13 +18,24 @@ import net.infinitycorp.asteroidsecs.systems.*;
 
 public class AsteroidsECS extends ApplicationAdapter {
     Engine engine;
+    SpriteBatch sb;
+    BitmapFont font;
+    Ui ui;
 
     @Override
     public void create() {
+        sb = new SpriteBatch();
+        font = new BitmapFont();
+        font.setColor(Color.WHITE);
+        font.getData().setScale(2);
 
         engine = new Engine();
+        Ui.engine = engine;
+        ui = Ui.getInstance();
 
-        engine.addSystem(new RenderSystem());
+        engine.addSystem(new RenderSystem(sb));
+        engine.addSystem(new ScoreUiUpdateSystem(sb, font));
+        engine.addSystem(new HitpointsUiUpdateSystem(sb, font));
         engine.addSystem(new MovementSystem());
         engine.addSystem(new ScreenWrapSystem());
         engine.addSystem(new PlayerControlSystem());
@@ -43,7 +59,9 @@ public class AsteroidsECS extends ApplicationAdapter {
         ship.add(new ShootingComponent(true, 0.1f));
         ship.add(new ShipComponent());
         ship.add(new HitCircleComponent(centreOfScreen, shipTexture.getWidth() / 2));
-        ship.add(new HitpointComponent(5));
+        HitpointComponent hp = new HitpointComponent(5);
+        ship.add(hp);
+        Ui.hitpoints = hp;
         engine.addEntity(ship);
     }
 
@@ -52,7 +70,9 @@ public class AsteroidsECS extends ApplicationAdapter {
         float delta = Gdx.graphics.getDeltaTime();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        sb.begin();
         engine.update(delta);
+        sb.end();
     }
 
     @Override

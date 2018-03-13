@@ -10,10 +10,10 @@ public class BulletCollisionSystem extends EntitySystem {
     private Engine engine;
     private ImmutableArray<Entity> bullets;
     private ImmutableArray<Entity> asteroids;
+    private ImmutableArray<Entity> scores;
 
-    private ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
-    private ComponentMapper<VisualComponent> visualMapper = ComponentMapper.getFor(VisualComponent.class);
     private ComponentMapper<HitCircleComponent> hitCircleMapper = ComponentMapper.getFor(HitCircleComponent.class);
+    private ComponentMapper<ScoreComponent> scoreMapper = ComponentMapper.getFor(ScoreComponent.class);
 
     public BulletCollisionSystem(Engine engine) {
         this.engine = engine;
@@ -22,6 +22,7 @@ public class BulletCollisionSystem extends EntitySystem {
     public void addedToEngine(Engine engine) {
         bullets = engine.getEntitiesFor(Family.all(BulletComponent.class, HitCircleComponent.class).get());
         asteroids = engine.getEntitiesFor(Family.all(AsteroidTypeComponent.class, HitCircleComponent.class).get());
+        scores = engine.getEntitiesFor(Family.all(ScoreComponent.class).get());
     }
 
     public void update(float delta) {
@@ -35,6 +36,9 @@ public class BulletCollisionSystem extends EntitySystem {
                 if (bulletHitCircle.overlaps(asteroidHitCircle)) {
                     engine.removeEntity(asteroid);
                     engine.removeEntity(bullet);
+                    for(Entity score : scores){
+                        scoreMapper.get(score).score += 1;
+                    }
                 }
             }
         }
