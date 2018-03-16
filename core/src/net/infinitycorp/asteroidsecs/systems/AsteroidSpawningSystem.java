@@ -47,7 +47,7 @@ public class AsteroidSpawningSystem extends EntitySystem {
     }
 
     private Vector2 randomizeVelocity() {
-        float speed = 100;
+        float speed = 50 + random.nextFloat() * 100;
 
         double randomDirection = random.nextDouble() * 2 * Math.PI;
         float velx = (float) Math.cos(randomDirection) * speed;
@@ -76,8 +76,10 @@ public class AsteroidSpawningSystem extends EntitySystem {
             AsteroidType newAsteroidType = asteroidValueMapper.get(destroyedAsteroid).type.nextSmallerAsteroid;
             PositionComponent position = positionMapper.get(destroyedAsteroid);
             if(newAsteroidType != null){
-                engine.addEntity(asteroidFactory.createAsteroid(new Vector2(position.x, position.y), randomizeVelocity(), newAsteroidType));
-                engine.addEntity(asteroidFactory.createAsteroid(new Vector2(position.x, position.y), randomizeVelocity(), newAsteroidType));
+                Vector2 spawnPosition = new Vector2(position.x, position.y);
+
+                engine.addEntity(asteroidFactory.createRandomizedAsteroid(spawnPosition, newAsteroidType, true));
+                engine.addEntity(asteroidFactory.createRandomizedAsteroid(spawnPosition, newAsteroidType, true));
             }
         }
     }
@@ -90,7 +92,7 @@ public class AsteroidSpawningSystem extends EntitySystem {
                 return;
             }
 
-            Entity asteroid = asteroidFactory.createAsteroid(randomizeSpawnLocation(), randomizeVelocity(), AsteroidType.randomAsteroidType());;
+            Entity asteroid = asteroidFactory.createRandomizedAsteroid(randomizeSpawnLocation(), AsteroidType.randomAsteroidType(), false);
             engine.addEntity(asteroid);
         }
         else{

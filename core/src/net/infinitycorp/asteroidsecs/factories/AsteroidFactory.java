@@ -5,9 +5,14 @@ import com.badlogic.gdx.math.Vector2;
 import net.infinitycorp.asteroidsecs.AsteroidType;
 import net.infinitycorp.asteroidsecs.components.*;
 
+import java.util.Random;
+
 public class AsteroidFactory {
 
+    Random random;
+
     public AsteroidFactory() {
+        random = new Random();
     }
 
     public Entity createAsteroid(Vector2 position, Vector2 velocity, AsteroidType type) {
@@ -20,5 +25,16 @@ public class AsteroidFactory {
         asteroid.add(new HitCircleComponent(position,  type.visual.width / 2));
 
         return asteroid;
+    }
+
+    public Entity createRandomizedAsteroid(Vector2 position, AsteroidType type, boolean offCentre){
+        Vector2 newPosition = position;
+        Vector2 velocity = new Vector2().setToRandomDirection();
+        float speed = 50 + random.nextFloat() * 100;
+
+        if(offCentre){
+            newPosition = position.add(velocity.cpy().scl(10));
+        }
+        return createAsteroid(newPosition, velocity.scl(speed), type);
     }
 }
