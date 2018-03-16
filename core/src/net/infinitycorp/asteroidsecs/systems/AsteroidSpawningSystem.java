@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import net.infinitycorp.asteroidsecs.AsteroidType;
 import net.infinitycorp.asteroidsecs.components.AsteroidTypeComponent;
 import net.infinitycorp.asteroidsecs.components.PositionComponent;
+import net.infinitycorp.asteroidsecs.components.ShipComponent;
 import net.infinitycorp.asteroidsecs.events.AsteroidDestructionListener;
 import net.infinitycorp.asteroidsecs.factories.AsteroidFactory;
 
@@ -20,6 +21,7 @@ public class AsteroidSpawningSystem extends EntitySystem {
 
     private Engine engine;
     private Random random;
+    private Entity ship;
     private float spawnCooldownTimer;
     private final float defaultCooldownTime = 2;
     private final int MAXASTEROIDVALUE = 10;
@@ -37,23 +39,20 @@ public class AsteroidSpawningSystem extends EntitySystem {
 
     public void addedToEngine(Engine engine) {
         entities = engine.getEntitiesFor(Family.all(AsteroidTypeComponent.class).get());
+        ImmutableArray<Entity> ships = engine.getEntitiesFor(Family.all(ShipComponent.class).get());
+
+        if (ships.size() > 0) {
+            ship = ships.first();
+        }
     }
 
-    private Vector2 randomizeSpawnLocation() {
-        float x = random.nextFloat() * Gdx.graphics.getWidth();
-        float y = random.nextFloat() * Gdx.graphics.getHeight();
-
-        return new Vector2(x, y);
-    }
-
-    private Vector2 randomizeVelocity() {
-        float speed = 50 + random.nextFloat() * 100;
-
-        double randomDirection = random.nextDouble() * 2 * Math.PI;
-        float velx = (float) Math.cos(randomDirection) * speed;
-        float vely = (float) Math.sin(randomDirection) * speed;
-
-        return new Vector2(velx, vely);
+    private Vector2 getRandomPositionNotNearPlayer(Vector2 playerPosition, float safeRadius) {
+        while (true) {
+            Vector2 potentialSpawnPosition = new Vector2().setToRandomDirection().scl(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            if (potentialSpawnPosition.dst(playerPosition) > safeRadius) {
+                return potentialSpawnPosition;
+            }
+        }
     }
 
     public void update(float delta) {
@@ -61,21 +60,20 @@ public class AsteroidSpawningSystem extends EntitySystem {
 
         int totalAsteroidValue = 0;
 
-        for (Entity e : entities){
+        for (Entity e : entities) {
             asteroidTypeComponent = asteroidValueMapper.get(e);
             totalAsteroidValue += asteroidTypeComponent.type.asteroidValue;
         }
-
         regularAsteroidSpawner(totalAsteroidValue, delta);
         spawnBrokenAsteroids();
     }
 
-    private void spawnBrokenAsteroids(){
+    private void spawnBrokenAsteroids() {
         Entity destroyedAsteroid = listener.getDestroyedAsteroid();
-        if(destroyedAsteroid != null){
+        if (destroyedAsteroid != null) {
             AsteroidType newAsteroidType = asteroidValueMapper.get(destroyedAsteroid).type.nextSmallerAsteroid;
             PositionComponent position = positionMapper.get(destroyedAsteroid);
-            if(newAsteroidType != null){
+            if (newAsteroidType != null) {
                 Vector2 spawnPosition = new Vector2(position.x, position.y);
 
                 engine.addEntity(asteroidFactory.createRandomizedAsteroid(spawnPosition, newAsteroidType, true));
@@ -84,18 +82,22 @@ public class AsteroidSpawningSystem extends EntitySystem {
         }
     }
 
-    private void regularAsteroidSpawner(int totalAsteroidValue, float delta){
+    private void regularAsteroidSpawner(int totalAsteroidValue, float delta) {
+        float playerSpawnRadius = 50;
+        PositionComponent playerPositionComponent = positionMapper.get(ship);
+        Vector2 playerPosition = new Vector2(playerPositionComponent.x, playerPositionComponent.y);
+
         if (spawnCooldownTimer < 0) {
             spawnCooldownTimer = defaultCooldownTime;
 
-            if(totalAsteroidValue >= MAXASTEROIDVALUE){
+            if (totalAsteroidValue >= MAXASTEROIDVALUE) {
                 return;
             }
 
-            Entity asteroid = asteroidFactory.createRandomizedAsteroid(randomizeSpawnLocation(), AsteroidType.randomAsteroidType(), false);
+
+            Entity asteroid = asteroidFactory.createRandomizedAsteroid(getRandomPositionNotNearPlayer(playerPosition, playerSpawnRadius), AsteroidType.randomAsteroidType(), false);
             engine.addEntity(asteroid);
-        }
-        else{
+        } else {
             spawnCooldownTimer -= delta;
         }
     }

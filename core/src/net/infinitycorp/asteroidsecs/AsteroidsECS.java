@@ -33,18 +33,6 @@ public class AsteroidsECS extends ApplicationAdapter {
         Ui.engine = engine;
         ui = Ui.getInstance();
 
-        engine.addSystem(new RenderSystem(sb));
-        engine.addSystem(new ScoreUiUpdateSystem(sb, font));
-        engine.addSystem(new HitpointsUiUpdateSystem(sb, font));
-        engine.addSystem(new MovementSystem());
-        engine.addSystem(new ScreenWrapSystem());
-        engine.addSystem(new PlayerControlSystem());
-        engine.addSystem(new ShootingSystem(engine));
-        engine.addSystem(new LifetimeSystem(engine));
-        engine.addSystem(new AsteroidSpawningSystem(engine));
-        engine.addSystem(new BulletCollisionSystem(engine));
-        engine.addSystem(new PlayerCollisionSystem(engine));
-
         Texture shipTexture = new Texture("ship.png");
         Vector2 centreOfScreen = new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
@@ -63,6 +51,20 @@ public class AsteroidsECS extends ApplicationAdapter {
         ship.add(hp);
         Ui.hitpoints = hp;
         engine.addEntity(ship);
+
+        engine.addSystem(new RenderSystem(sb));
+        engine.addSystem(new ScoreUiUpdateSystem(sb, font));
+        engine.addSystem(new HitpointsUiUpdateSystem(sb, font));
+        engine.addSystem(new MovementSystem());
+        engine.addSystem(new ScreenWrapSystem());
+        engine.addSystem(new PlayerControlSystem());
+        engine.addSystem(new ShootingSystem(engine));
+        engine.addSystem(new LifetimeSystem(engine));
+        engine.addSystem(new AsteroidSpawningSystem(engine));
+        engine.addSystem(new BulletCollisionSystem(engine));
+        engine.addSystem(new PlayerCollisionSystem(engine));
+
+
     }
 
     @Override
