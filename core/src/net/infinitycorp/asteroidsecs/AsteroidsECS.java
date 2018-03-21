@@ -3,8 +3,10 @@ package net.infinitycorp.asteroidsecs;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,9 +23,11 @@ public class AsteroidsECS extends ApplicationAdapter {
     SpriteBatch sb;
     BitmapFont font;
     Ui ui;
+    boolean isPaused;
 
     @Override
     public void create() {
+        isPaused = false;
         sb = new SpriteBatch();
         font = new BitmapFont();
         font.setColor(Color.WHITE);
@@ -72,6 +76,16 @@ public class AsteroidsECS extends ApplicationAdapter {
         float delta = Gdx.graphics.getDeltaTime();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            isPaused = !isPaused;
+            for(EntitySystem system : engine.getSystems()){
+                if(!(system.getClass() == RenderSystem.class)){
+                    system.setProcessing(isPaused);
+                }
+            }
+        }
+
         sb.begin();
         engine.update(delta);
         sb.end();
